@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Chart } from "react-google-charts";
 
 const TweetTrends = () => {
@@ -12,21 +12,34 @@ const TweetTrends = () => {
     ["2024-01-24", 500],
   ];
 
-  const options = {
+  const [options] = useState({
     title: "Twitter Sentiments Over Time",
     curveType: "function",
-    legend: { position: "bottom" },
     hAxis: { title: "Date" },
     vAxis: { title: "Mentions" },
     backgroundColor: "#f8f9fa",
-  };
+    legend: { position: "bottom" },
+  });
 
   const eventListeners = [{
       eventName: "select",
       callback({ chartWrapper }) {
-        console.log("Selected ", chartWrapper.getChart().getSelection());
+        const selection = chartWrapper.getChart().getSelection()
+        if (selection.length === 0)
+          setSelectedDate(new Date(0))
+        else {
+          const num = selection[0].row;
+          setSelectedDate(new Date(data[num + 1][0] + "T00:00:00.000Z"))
+        }
+        
       },
     }]
+
+  const [selectedDate, setSelectedDate] = useState(new Date(0));
+
+  const dateToString = (date) => {
+    return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate()
+  }
 
   return (
     <div style={{ width: "100%", height: "400px", display: "flex", justifyContent: "center" }}>
@@ -38,6 +51,11 @@ const TweetTrends = () => {
         options={options}
         chartEvents={eventListeners}
       />
+
+      <div style={{width:"100px", fontSize:"1.1rem"}}>
+        <div style = {{fontWeight: 600, width: "100%", borderBottom: "1px solid #1e90ff", marginBottom: 10}}>Selection</div> 
+        <span>{dateToString(selectedDate)}</span>
+      </div>
     </div>
   );
 };

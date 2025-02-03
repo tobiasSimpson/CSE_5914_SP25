@@ -9,25 +9,6 @@
   }
 }
 
-.input {
-  font-size: inherit;
-  font-family: inherit;
-
-}
-
-.btn {
-  font-size: inherit;
-  font-family: inherit;
-  /* background-color: #3c7eee;
-  color: white;
-  border: 1px solid #444; */
-}
-/* 
-.input-group :first-child {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-} */
-
 .question {
   padding-right: 10px;
   

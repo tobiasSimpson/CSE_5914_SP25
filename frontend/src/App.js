@@ -1,6 +1,10 @@
 import logo from './logo.png';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import TweetTrends  from './TweetTrends';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
 
 function App() {
   return (
@@ -12,14 +16,15 @@ function App() {
         <span>EchoX</span>
       </header>
       <div className="Body">
-
-        <span className = "question">
-          What topic would you like to explore?
-        </span>
-        <span className = "input-group">
-          <input id="topic" className="input" placeholder = "Twitter, e.g."></input>
-          <button className = "btn">Search</button>
-        </span>
+        <div style={{display:'flex'}}>
+          <span className = "question" style={{width:600}}>
+            What topic would you like to explore?
+          </span>
+          <InputGroup style={{flexGrow:1}}>
+            <Form.Control type="text" id="topic" className="input" placeholder = "Twitter, e.g."></Form.Control>
+            <Button variant="primary">Search</Button>
+          </InputGroup>
+        </div>
 
         <br />
         <br />
