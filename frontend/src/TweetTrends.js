@@ -4,21 +4,33 @@ import { Chart } from "react-google-charts";
 const TweetTrends = () => {
   // Example Data: Date vs Tweet Mentions
   const data = [
-    ["Date", "Sentiment"],
-    ["2024-01-20", 200],
-    ["2024-01-21", 250],
-    ["2024-01-22", 400],
-    ["2024-01-23", 350],
-    ["2024-01-24", 500],
+    ["Date", "Mentions", "Sentiment"],
+    ["2024-01-20", 200, 0],
+    ["2024-01-21", 250, 0.7],
+    ["2024-01-22", 400, 0.2],
+    ["2024-01-23", 350, 0.6],
+    ["2024-01-24", 500, 0.5],
   ];
 
+
   const [options] = useState({
-    title: "Twitter Sentiments Over Time",
+    title: "Popularity Over Time",
     curveType: "function",
     hAxis: { title: "Date" },
     vAxis: { title: "Mentions" },
     backgroundColor: "#f8f9fa",
     legend: { position: "bottom" },
+
+    // Hide the sentiment data
+    series: {
+      1: { 
+        visibleInLegend: false,
+        lineWidth: 0
+
+       },
+    },
+
+
   });
 
   const eventListeners = [{
@@ -38,6 +50,7 @@ const TweetTrends = () => {
   const [selectedDate, setSelectedDate] = useState(new Date(0));
 
   const dateToString = (date) => {
+    if (date.getTime() === 0) return "No date selected"
     return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate()
   }
 
