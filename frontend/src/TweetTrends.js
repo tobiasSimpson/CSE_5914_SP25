@@ -1,76 +1,114 @@
-import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 
-const TweetTrends = () => {
-  // Example Data: Date vs Tweet Mentions
-  const data = [
-    ["Date", "Mentions", "Sentiment"],
-    ["2024-01-20", 200, 0],
-    ["2024-01-21", 250, 0.7],
-    ["2024-01-22", 400, 0.2],
-    ["2024-01-23", 350, 0.6],
-    ["2024-01-24", 500, 0.5],
-  ];
+const TweetTrends = ({chartData, chartTitle}) => {
+  
+  const chartBackgroundColor = "#f8f9fa";
 
+  const [options, setOptions] = useState(null);
 
-  const [options] = useState({
-    title: "Popularity Over Time",
-    curveType: "function",
-    hAxis: { title: "Date" },
-    vAxis: { title: "Mentions" },
-    backgroundColor: "#f8f9fa",
-    legend: { position: "bottom" },
+  useEffect(() => {
+    setOptions({
+      title: `Popularity of ${chartTitle} Over Time`,
+      // curveType: "function",
+      hAxis: { 
+        title: "Date",
+        // Don't show every date
+        maxAlterations: 1,
+        minTextSpacing: 20,
+        format: "MMM yyyy",
+        gridlines: {color: "none"}
 
-    // Hide the sentiment data
-    series: {
-      1: { 
-        visibleInLegend: false,
-        lineWidth: 0
-
+      },
+      vAxis: { 
+        title: "Mentions",
+        minValue: 0,
        },
-    },
+      backgroundColor: chartBackgroundColor,
+      legend: { position: "none" },
 
-
-  });
+      // Hide the sentiment data
+      series: {
+        1: { 
+          visibleInLegend: false,
+          lineWidth: 0,
+          //no tooltip
+          enableInteractivity: false,
+        },
+      },
+    })
+  }, [chartTitle])
 
   const eventListeners = [{
       eventName: "select",
       callback({ chartWrapper }) {
         const selection = chartWrapper.getChart().getSelection()
         if (selection.length === 0)
-          setSelectedDate(new Date(0))
+          setSelectedData(null)
         else {
           const num = selection[0].row;
-          setSelectedDate(new Date(data[num + 1][0] + "T00:00:00.000Z"))
+          setSelectedData({
+            date: chartData[num + 1][0],
+            mentions: chartData[num + 1][1], 
+            sentiment: chartData[num + 1][2]
+          });
         }
         
       },
     }]
 
-  const [selectedDate, setSelectedDate] = useState(new Date(0));
+  const [selectedData, setSelectedData] = useState(null);
+
+  // Reset the selection when the chart changes
+  useEffect(() => setSelectedData(null), [chartTitle])
 
   const dateToString = (date) => {
-    if (date.getTime() === 0) return "No date selected"
-    return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate()
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    return months[date.getUTCMonth()] + " " + date.getUTCFullYear()
   }
 
-  return (
-    <div style={{ width: "100%", height: "400px", display: "flex", justifyContent: "center" }}>
-      <Chart
-        chartType="LineChart"
-        width="90%"
-        height="100%"
-        data={data}
-        options={options}
-        chartEvents={eventListeners}
-      />
+  const sentimentToString = (sentiment) => {
+    // Color from red to green
+    const color = "hsl(" + (sentiment * 120) + ", 100%, 35%)"
+    const sentimentString = Math.floor(sentiment * 10 +1) + "/10"
+    return <span style={{color: color}}>{sentimentString}</span>
+  }
 
-      <div style={{width:"100px", fontSize:"1.1rem"}}>
+
+  return (
+    <div style={{ width: "100%", height: "400px", display: "flex", justifyContent: "center", backgroundColor: "#f8f9fa"}}>
+      {chartData === null ? <div style = {{flexGrow: 1}}>Loading...</div> :
+        <div style ={{flexGrow: 1}}>
+          <ChartMemoized
+            chartType="LineChart"
+            width="100%"
+            height="100%"
+            data={chartData}
+            options={options}
+            chartEvents={eventListeners}
+          />
+        </div>
+      }
+
+      <div style={{width:"200px", fontSize:"1.1rem", padding:"50px 30px 50px 0"}}>
         <div style = {{fontWeight: 600, width: "100%", borderBottom: "1px solid #1e90ff", marginBottom: 10}}>Selection</div> 
-        <span>{dateToString(selectedDate)}</span>
+        
+        {selectedData === null ? <span>No selection</span> :
+          <div>
+            <span>{dateToString(selectedData.date)}</span>
+            <div style = {{margin: "10px 0"}}>Sentiment: {sentimentToString(selectedData.sentiment)}</div>
+            <Button variant="primary" onClick={()=> alert("Not yet implemented")}>Generate Tweets</Button>
+          </div>
+        }
+        
       </div>
     </div>
   );
 };
+
+// Only rerender the chart when the title has changed
+// This also means that the selection wont always be immediately cleared
+const ChartMemoized = React.memo(Chart, (old, current) => current.options.title === old.options.title);
 
 export default TweetTrends;

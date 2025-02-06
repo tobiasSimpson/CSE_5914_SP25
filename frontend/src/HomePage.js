@@ -3,12 +3,32 @@ import TweetTrends  from './TweetTrends';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function HomePage() {
 
   const search = async () => {
-    alert(`You searched for ${searchString}`)
+    if (searchDisabled || searchString === chartTitle) return;
+    setSearchDisabled(true);
+    const curSearchString = searchString || "Artificial Intelligence";
+    
+    // Get the search results
+    // Temporary
+    const a = () => Math.floor(Math.random() * 1000);
+    const b = Math.random
+    const data = [
+      ["Date", "Mentions", "Sentiment"],
+      ...Array.from(Array(12)).map((_, i) => 
+        [new Date(2024, i, 1), a(), b()]
+      )
+    ];
+
+    // Sleep for half a second
+    await new Promise(r => setTimeout(r, 500));
+
+    setSearchDisabled(false);
+    setChartData(data); 
+    setChartTitle(curSearchString)
   }
 
   const searchIfEnter = (e) => {
@@ -16,6 +36,17 @@ function HomePage() {
   }
 
   const [searchString, setSearchString] = useState("");
+
+  const [searchDisabled, setSearchDisabled] = useState(false);
+
+  const [chartTitle, setChartTitle] = useState("Twitter");
+
+  const [chartData, setChartData] = useState(null);
+
+  // Search on load
+  useEffect(() => {
+    search()
+  }, []);
 
   return (
     <div className="App">
@@ -31,13 +62,13 @@ function HomePage() {
           <InputGroup style={{flexGrow:1}} onKeyDown={searchIfEnter}>
             <Form.Control type="text" id="topic" className="input" placeholder = "Twitter, e.g." 
               value={searchString} onChange={(e) => setSearchString(e.target.value)}></Form.Control>
-            <Button variant="primary" onClick={search}>Search</Button>
+            <Button variant="primary" onClick={search} disabled={searchDisabled}>Search</Button>
           </InputGroup>
         </div>
 
         <br />
         <br />
-        <TweetTrends/>
+        <TweetTrends chartData={chartData} chartTitle={chartTitle} />
       </div>
 
     </div>
