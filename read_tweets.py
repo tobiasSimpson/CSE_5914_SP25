@@ -13,7 +13,7 @@ def load_sanders_tweets(filename: str) -> pd.DataFrame:
     return df
 
 # load tweets from celebrities
-def load_celebrity_tweets(filename: str) -> pd.DataFrame:
+def load_celebrity_tweets(filename: str = 'celebrity_tweets.csv') -> pd.DataFrame:
     column_names = ['user', 'tweet', 'sentiment_label']
     df = pd.read_csv(f'{DATA_FOLDER}/{filename}', header=None, names=column_names)
     df.dropna(inplace=True)
@@ -44,7 +44,7 @@ def load_cikm_tweets(filename: str) -> pd.DataFrame:
 
 
 def debug():
-    df = load_celebrity_tweets('celebrity_tweets_results.csv')
+    df = load_celebrity_tweets('celebrity_tweets.csv')
     print(f'Celebrity tweets: {len(df)} loaded.\n{df.head()}')
 
     df = load_sanders_tweets('sanders_corpus.csv')
