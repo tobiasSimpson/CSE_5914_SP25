@@ -13,16 +13,16 @@ const TweetTrends = ({chartData, chartTitle, setTweets}) => {
     if (generateTweetsDisabled) return;
     setGenerateTweetsDisabled(true);
     const tweetTemplates = [
-      "AI is taking over the world! 🌍🚀",
-      "Just read an amazing article on #MachineLearning!",
-      "Data Science is the future of tech! 🔥",
-      "Is AI going too far? 🤔",
-      "Tech trends are evolving faster than ever!",
-      "Big data is reshaping everything we do. #Analytics",
-      "Another breakthrough in #ArtificialIntelligence!",
-      "The future of work is AI-driven. 🚀",
-      "Are we ready for AGI? #ArtificialGeneralIntelligence",
-      "Sentiment analysis is fascinating! 📊",
+      "Look at this random tweet",
+      "Wow, this is totally a real tweet that someone posted!",
+      "OMG, this project idea is GENIUS!",
+      "This demo totally deserves 100%!!!!",
+      "I can't believe this is a real tweet!",
+      "This is a tweet that someone posted!",
+      "Our group is so cool!!",
+      "This is a tweet!",
+      "This is also a tweet",
+      "Pretend there are emojis in this one, I'm too lazy to look up unicode emojis"
     ];
 
     // Shuffle and select 5 random tweets
