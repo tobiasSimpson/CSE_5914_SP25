@@ -15,15 +15,23 @@ def load_sanders_tweets(filename: str) -> pd.DataFrame:
     column_names = ["topic", "sentiment", "tweet_id", "date", "text"]
     tweets = pd.read_csv(csvFilePath, header=0, names=column_names)
     tweets.dropna(inplace=True)
-
     return tweets
 
+# load tweets from celebrity tweets dataset
 def load_celebrity_tweets(filename: str) -> pd.DataFrame:
     column_names = ['user', 'text', 'sentiment']
     tweets = pd.read_csv(f'{DATA_FOLDER}/{filename}.csv', header=None, names=column_names)
     tweets.dropna(inplace=True)
     return tweets
 
+# load trump tweets dataset
+def load_trump_tweets(filename: str) -> pd.DataFrame:
+    column_names = ['text', 'favorites', 'retweets', 'date']
+    tweets = pd.read_csv(f'{DATA_FOLDER}/{filename}.csv', usecols=column_names)
+    tweets.dropna(inplace=True)
+    return tweets
+
+# load cikm tweets dataset
 def load_cikm_tweets(filename: str):
     # helper to process a single file line
     def process_line(line):
@@ -65,6 +73,7 @@ def load_cikm_tweets(filename: str):
         file.write(json.dumps(tweets))
 
 def load_data():
+    
     sander_tweets = load_sanders_tweets('sanders_corpus')
     print(sander_tweets.head())
     celeb_tweets = load_celebrity_tweets('celebrity_tweets_results')
@@ -73,6 +82,10 @@ def load_data():
     data = pd.concat([sander_tweets, celeb_tweets], ignore_index=True, sort=False)
     print(data.head())
     data.to_json(f"{DATA_FOLDER}/data.json", orient='records')
+    '''
+    trump_tweets = load_trump_tweets('trump_tweets')
+    print(trump_tweets.head)
+    '''
 
 if __name__ == '__main__':
     load_data()
