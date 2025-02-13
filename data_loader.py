@@ -66,7 +66,7 @@ def load_cikm_tweets(filename: str, silent: bool):
 
 def load_data():
     sander_tweets = load_sanders_tweets('sanders_corpus', False)
-    celeb_tweets = load_celebrity_tweets('celebrity_tweets_results')
+    celeb_tweets = load_celebrity_tweets('celebrity_tweets')
     #load_cikm_tweets('cikm_2010_tweets', False)
     data = pd.concat([sander_tweets, celeb_tweets], ignore_index=True, sort=False)
     print(data.head())
