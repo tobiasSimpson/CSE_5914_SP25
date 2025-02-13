@@ -14,11 +14,13 @@ client = weaviate.connect_to_weaviate_cloud(
 
 questions = client.collections.get("tweets")
 
-query = 'technology, phones'
+# get topic query from the user:
+query = input('Enter a query for tweet RAG: ')
+
 response = questions.generate.near_text(
     query=query,
-    limit=10,
-    grouped_task="Create a concise twitter-style post assimilating the information in the following tweets. Do not include any extraneous text, directly generate the resulting tweet.",
+    limit=10,   # can't be too high
+    grouped_task="Create a concise twitter-style post including the information in the following tweets. Do NOT include any extraneous text, ONLY directly generate the resulting tweet.",
 )
 
 print(f'QUERY: "{query}"\n')
@@ -28,6 +30,8 @@ for obj in response.objects:
     if len(text) <20:
         continue
     print('💬 '+obj.properties['text'])
+
+generated_text = response.generated.strip('"')
 
 print(f'\n🤖 {response.generated}')
 
