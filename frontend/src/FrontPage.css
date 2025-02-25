@@ -1,5 +1,7 @@
+
+
 .front-page {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,6 +11,7 @@
 }
 
 .overlay {
+    position: absolute;
     background: rgba(0, 0, 0, 0.6);
     padding: 50px;
     border-radius: 10px;
@@ -25,14 +28,14 @@
     font-size: 3rem;
     font-weight: bold;
     justify-content: center;
-    }
+}
 
-    .tagline {
+.tagline {
     font-size: 1.2rem;
     margin-bottom: 30px;
-    }
+}
 
-    .start-btn {
+.start-btn {
     font-size: 1.2rem;
     padding: 10px 20px;
     border-radius: 25px;
