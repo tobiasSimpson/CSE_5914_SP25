@@ -19,7 +19,7 @@ tweet_data = json.loads(json_list)
 
 tweets_collection = client.collections.get("tweets")
 
-with tweets_collection.batch.dynamic() as batch:
+with tweets_collection.batch.fixed_size(batch_size=1) as batch:
     for data_row in tweet_data:
         batch.add_object({
             "topic": data_row["topic"],
