@@ -1,8 +1,11 @@
 # Basic Flask REST API
 from flask import Flask, jsonify, request, abort
 from make_rag_request import make_request, close as close_weaviate
+from flask_cors import CORS
+# Allow CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Generating sample tweets
 @app.route('/sample_tweets/<string:topic>', methods=['GET'])
@@ -21,4 +24,4 @@ def bad_request(error):
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

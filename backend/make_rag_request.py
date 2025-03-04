@@ -1,8 +1,7 @@
 import weaviate
 from weaviate.classes.init import Auth
+from weaviate.classes.aggregate import GroupByAggregate
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 wcd_url = os.environ["WCD_URL"]
 wcd_api_key = os.environ["WCD_API_KEY"]
@@ -23,9 +22,9 @@ def make_request(query):
         grouped_task="Create a concise twitter-style post including the information in the following tweets. Do NOT include any extraneous text, ONLY directly generate the resulting tweet.",
     )
 
-    text = [obj.properties["text"] for obj in response.objects]
+    text = {obj.properties["text"] for obj in response.objects}
     generated_text = response.generated.strip('"')
-    return {'text': text, 'generated': generated_text}
+    return {'text': list(text), 'generated': generated_text}
 
 
 def close():

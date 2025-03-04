@@ -1,4 +1,4 @@
 *.key
 data
 __*
-.env
+backend.env

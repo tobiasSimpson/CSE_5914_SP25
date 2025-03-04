@@ -14,11 +14,12 @@ This project aims to develop a Retrieval-Augmented Generation (RAG) system that 
 ```
 git clone https://github.com/tobiasSimpson/CSE_5914_SP25
 ```
-2. Install `conda` if you haven't already from the [installation page](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html).
-3. Create a new `conda` environment and install requirements:
+2. Make sure you have docker installed
+3. Export your Weaviate Cloud Database (WCD) URL, the WCD API key and the Cohere API key as environment variables as `WCD_URL, WCD_API_KEY, COHERE_API_KEY` respectively.  Put these in a file called `backend.env` in this directory.  The file should look like the following:
+```dotenv
+WCD_URL="https://vivw2msbwnqtysrotsqa.c0.us-east1.gcp.weaviate.cloud"
+WCD_API_KEY="9rdQkROFdIPKvxH7GcCDlNLGNRWOw4Gr66j7"
+COHERE_API_KEY=466SIWQwWoiLeyot0wfIHdqavbYIZfwPTkiblXuY
 ```
-conda create --name autoac --file requirements.txt
-```
-4. Export your Weaviate Cloud Database (WCD) URL, the WCD API key and the Cohere API key as environment variables as `WCD_URL, WCD_API_KEY, COHERE_API_KEY` respectively.
 
-5. `python3 rag.py` will run RAG on your data!
+4. `docker compose up` will start the application at http://localhost.  You may need to use sudo to run this, and you can add `-d` to run in detached mode.

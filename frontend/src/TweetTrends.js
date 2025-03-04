@@ -12,23 +12,17 @@ const TweetTrends = ({chartData, chartTitle, setTweets}) => {
   const generateTweets = async () => {
     if (generateTweetsDisabled) return;
     setGenerateTweetsDisabled(true);
-    const tweetTemplates = [
-      "Look at this random tweet",
-      "Wow, this is totally a real tweet that someone posted!",
-      "OMG, this project idea is GENIUS!",
-      "This demo totally deserves 100%!!!!",
-      "I can't believe this is a real tweet!",
-      "This is a tweet that someone posted!",
-      "Our group is so cool!!",
-      "This is a tweet!",
-      "This is also a tweet",
-      "Pretend there are emojis in this one, I'm too lazy to look up unicode emojis"
-    ];
 
-    // Shuffle and select 5 random tweets
-    const randomTweets = tweetTemplates.sort(() => 0.5 - Math.random()).slice(0, 5);
-    await new Promise(r => setTimeout(r, 500));
-    setTweets(randomTweets);
+    // Get the tweets from localhost:5000/sample_tweets/<topic>
+    const response = await fetch(`http://localhost:5000/sample_tweets/${chartTitle}`);
+    if (!response.ok) {
+      setTweets(["Error fetching tweets"]);
+      setGenerateTweetsDisabled(false);
+      return;
+    }
+    const responseJSON = await response.json();
+    const tweets = [responseJSON.generated, ...responseJSON.text]
+    setTweets(tweets);
     setGenerateTweetsDisabled(false);
   };
 
