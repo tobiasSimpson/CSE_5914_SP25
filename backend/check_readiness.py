@@ -13,9 +13,3 @@ client = weaviate.connect_to_weaviate_cloud(
 print(client.is_ready())
 client.close()
 # should print `True`
-
-"""
-export WCD_URL="https://vivw2msbwnqtysrotsqa.c0.us-east1.gcp.weaviate.cloud"
-export WCD_API_KEY="9rdQkROFdIPKvxH7GcCDlNLGNRWOw4Gr66j7"
-export COHERE_API_KEY=466SIWQwWoiLeyot0wfIHdqavbYIZfwPTkiblXuY
-"""

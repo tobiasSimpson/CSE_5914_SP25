@@ -1,3 +1,5 @@
+# DEMO, not actually used
+
 import weaviate
 from weaviate.classes.init import Auth
 import os
