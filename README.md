@@ -18,8 +18,8 @@ git clone https://github.com/tobiasSimpson/CSE_5914_SP25
 3. Export your Weaviate Cloud Database (WCD) URL, the WCD API key and the Cohere API key as environment variables as `WCD_URL, WCD_API_KEY, COHERE_API_KEY` respectively.  Put these in a file called `backend.env` in this directory.  The file should look like the following:
 ```dotenv
 WCD_URL="https://vivw2msbwnqtysrotsqa.c0.us-east1.gcp.weaviate.cloud"
-WCD_API_KEY="9rdQkROFdIPKvxH7GcCDlNLGNRWOw4Gr66j7"
-COHERE_API_KEY=466SIWQwWoiLeyot0wfIHdqavbYIZfwPTkiblXuY
+WCD_API_KEY="something"
+COHERE_API_KEY=something
 ```
 
 4. `docker compose up` will start the application at http://localhost.  You may need to use sudo to run this, and you can add `-d` to run in detached mode.
