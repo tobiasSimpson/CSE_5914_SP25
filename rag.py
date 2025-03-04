@@ -25,8 +25,12 @@ response = questions.generate.near_text(
 
 print(f'QUERY: "{query}"\n')
 
+seen_text = set()
 for obj in response.objects:
     text = obj.properties['text']
+    if text in seen_text:
+        continue
+    seen_text.add(text)
     if len(text) <20:
         continue
     print('💬 '+obj.properties['text'])
