@@ -1,38 +1,86 @@
+import json
+import os
+import time
+from datetime import datetime
+
 import weaviate
+from tqdm import tqdm
 from weaviate.classes.init import Auth
-import json, os
+from typing import List
 
 # Best practice: store your credentials in environment variables
 wcd_url = os.environ["WCD_URL"]
 wcd_api_key = os.environ["WCD_API_KEY"]
-cohere_api_key = os.environ["COHERE_API_KEY"]
+openai_api_key = os.environ["OPENAI_API_KEY"]
 
-client = weaviate.connect_to_weaviate_cloud(
-    cluster_url=wcd_url,
-    auth_credentials=Auth.api_key(wcd_api_key),
-    headers={"X-Cohere-Api-Key": cohere_api_key}
-)
+def add_data(client: weaviate.WeaviateClient, collection_name: str, data: List[dict]) -> None:
+    """
+    {
+        "sentiment": data_row["target"],
+        "username": data_row["user"],
+        "text": data_row["text"],
+        "date": data_row["date"],
+    }
+    """
 
-# data is of the form [{'tweet':'', 'date':'',...}, {}, ...]
-json_list = open("data/data.json", "r").read()
-tweet_data = json.loads(json_list)
+    collection = client.collections.get(collection_name)
 
-tweets_collection = client.collections.get("tweets")
+    with collection.batch.dynamic() as batch:
+        for src_obj in tqdm(data):
+            batch.add_object(
+                properties={
+                    "sentiment": src_obj["target"],
+                    "username": src_obj["user"],
+                    "text": src_obj["text"],
+                    "date": src_obj["date"],
+                },
+            )
+            if batch.number_errors > 10:
+                print("Batch import stopped due to excessive errors.")
+                break
+    print(f'final number of items in the collection: {collection.data.__sizeof__()}')
+    failed_objects = collection.batch.failed_objects
+    if failed_objects:
+        print(f"Number of failed imports: {len(failed_objects)}")
+        print(f"First failed object: {failed_objects[0]}")
 
-with tweets_collection.batch.fixed_size(batch_size=1) as batch:
-    for data_row in tweet_data:
-        batch.add_object({
-            "topic": data_row["topic"],
-            "text": data_row["text"],
-            "date": data_row["date"],
-        })
-        if batch.number_errors > 10:
-            print("Batch import stopped due to excessive errors.")
-            break
 
-failed_objects = tweets_collection.batch.failed_objects
-if failed_objects:
-    print(f"Number of failed imports: {len(failed_objects)}")
-    print(f"First failed object: {failed_objects[0]}")
+def init_client() -> weaviate.WeaviateClient:
+    """
+    Initialize the Weaviate client.
+    """
+    headers = {
+        "X-OpenAI-Api-Key": openai_api_key,
+    }
+    client = weaviate.connect_to_weaviate_cloud(
+        cluster_url=wcd_url,
+        auth_credentials=Auth.api_key(wcd_api_key),
+        headers=headers,
+    )
+    return client
 
-client.close()
+
+def main():
+    client = init_client()
+    file = open("data/sentiment_140.json", "r")
+    json_list = file.read()
+    sentiment_data = json.loads(json_list)
+    
+    # sort data in ascending order of 'sentiment' value:
+    sentiment_data.sort(key=lambda x: x['target'], reverse=True)  # sort by sentiment value
+    sentiment_collection = client.collections.get("Sentiment140")
+
+    num_preeexisting_objects = sentiment_collection.data.__sizeof__()
+    print(f"Number of items in the collection: {num_preeexisting_objects}")
+
+    # TOTAL_N_ITEMS = 10000
+    TOTAL_N_ITEMS = 0
+    
+    sentiment_data = sentiment_data[num_preeexisting_objects:TOTAL_N_ITEMS + num_preeexisting_objects]
+    print(f'adding {len(sentiment_data)} new items to the collection...')
+    add_data(client, "Sentiment140", sentiment_data)
+    file.close()
+    client.close()
+
+if __name__ == "__main__":
+    main()
