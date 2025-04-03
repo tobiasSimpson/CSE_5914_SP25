@@ -1,16 +1,19 @@
 # Basic Flask REST API
 from flask import Flask, jsonify, request, abort
 from make_rag_request import make_request, close as close_weaviate
+from get_sentiment import get_sentiment
 from flask_cors import CORS
 # Allow CORS
 
 app = Flask(__name__)
 CORS(app)
 
-# Generating sample tweets
-@app.route('/sample_tweets/<string:topic>', methods=['GET'])
+# Generating sample tweets and sentiment
+@app.route('/tweet_data/<string:topic>', methods=['GET'])
 def get_items(topic):
-    return jsonify(make_request(topic))
+    sample_tweets = make_request(topic)
+    sentiment = get_sentiment(topic)
+    return jsonify({"tweets": make_request(topic), "sentiment": sentiment})
 
 # Error handler for 404
 @app.errorhandler(404)
