@@ -32,18 +32,18 @@ def run_sentiment_aggregation(client: weaviate.WeaviateClient,  query: str, coll
 
         print(response.total_count)
         print(response.properties)
+    except Exception as e:
+        print(f"Error during aggregation: {e}")
+        return None
 
-    finally:
-        client.close()
 
-
-def run_neartext(client: weaviate.WeaviateClient, collection_name: str = "sentiment140"):
+def run_neartext(client: weaviate.WeaviateClient, query: str = "social", collection_name: str = "sentiment140"):
     tweets = client.collections.get(name=collection_name)
     # tweets = client.collections.get("sentiment140")
     # print number of items in the collection:
     print(f"Number of items in the collection: {tweets.data.__sizeof__()}")
     response = tweets.query.near_text(
-        query="social",
+        query=query,
         limit=10
     )
 
@@ -53,6 +53,7 @@ def run_neartext(client: weaviate.WeaviateClient, collection_name: str = "sentim
             continue
         seen.add(obj.properties["text"])
         print(json.dumps(obj.properties, indent=2))
+
 
 if __name__ == "__main__":
     client = init_client()
