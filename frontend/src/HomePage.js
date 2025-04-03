@@ -5,7 +5,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import TweetList from './TweetList';
-import Card from 'react-bootstrap/Card';
 
 function HomePage() {
 
@@ -59,12 +58,12 @@ function HomePage() {
   }, []);
 
   // Scroll to the tweet list whenever tweets changes
-  useEffect(() => {
-    // Check if tweets is empty
-    if (tweets.length === 0) return;
-    const y = document.getElementById("tweets-container").getBoundingClientRect().top + window.scrollY - 40;
-    window.scrollTo({top: y, behavior: 'smooth'});
-  }, [tweets]);
+  // useEffect(() => {
+  //   // Check if tweets is empty
+  //   if (tweets.length === 0) return;
+  //   const y = document.getElementById("tweets-container").getBoundingClientRect().top + window.scrollY - 40;
+  //   window.scrollTo({top: y, behavior: 'smooth'});
+  // }, [tweets]);
 
   return (
     <div className="App">
