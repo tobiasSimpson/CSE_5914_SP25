@@ -30,20 +30,21 @@ def run_sentiment_aggregation(client: weaviate.WeaviateClient,  query: str, coll
             ]
         )
 
-        print(response.total_count)
+        print('Total count of tweets aggregated:', response.total_count)
+        print('Aggregated results:')
         print(response.properties)
 
     finally:
         client.close()
 
 
-def run_neartext(client: weaviate.WeaviateClient, collection_name: str = "sentiment140"):
+def run_neartext(client: weaviate.WeaviateClient, query: str, collection_name: str = "sentiment140"):
     tweets = client.collections.get(name=collection_name)
     # tweets = client.collections.get("sentiment140")
     # print number of items in the collection:
     print(f"Number of items in the collection: {tweets.data.__sizeof__()}")
     response = tweets.query.near_text(
-        query="social",
+        query=query,
         limit=10
     )
 
@@ -57,6 +58,8 @@ def run_neartext(client: weaviate.WeaviateClient, collection_name: str = "sentim
 if __name__ == "__main__":
     client = init_client()
     query_text='technology'
+    print(f'{"*"*12} Running neartext query for "{query_text}": {"*"*12}')
     run_neartext(client=client, query='virus', collection_name="sentiment140")
+    print(f'\n{"*"*12} Running sentiment aggregation for "{query_text}": {"*"*12}')    
     run_sentiment_aggregation(client=client, query='technology', collection_name="sentiment140")
     client.close()
