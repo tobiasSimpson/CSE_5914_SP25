@@ -15,11 +15,11 @@ This project aims to develop a Retrieval-Augmented Generation (RAG) system that 
 git clone https://github.com/tobiasSimpson/CSE_5914_SP25
 ```
 2. Make sure you have docker installed
-3. Export your Weaviate Cloud Database (WCD) URL, the WCD API key and the Cohere API key as environment variables as `WCD_URL, WCD_API_KEY, COHERE_API_KEY` respectively.  Put these in a file called `backend.env` in this directory.  The file should look like the following:
+3. Export your Weaviate Cloud Database (WCD) URL, the WCD API key and the OpenAI API key as environment variables as `WCD_URL, WCD_API_KEY, OPENAI_API_KEY` respectively.  Put these in a file called `backend.env` in this directory.  The file should look like the following:
 ```dotenv
-WCD_URL="https://vivw2msbwnqtysrotsqa.c0.us-east1.gcp.weaviate.cloud"
+WCD_URL="https://something.weaviate.cloud"
 WCD_API_KEY="something"
-COHERE_API_KEY=something
+OPENAI_API_KEY="something"
 ```
 
 4. `docker compose up` will start the application at http://localhost.  You may need to use sudo to run this, and you can add `-d` to run in detached mode.
