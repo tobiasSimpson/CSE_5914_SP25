@@ -31,7 +31,7 @@ def create_collection(client: weaviate.WeaviateClient, name: str, source_propert
 
 # delete_collection(client, "sentiment_tweets")  # Delete if it exists
 # delete_collection(client, "Sentiment140")  # Delete if it exists
-# create_collection(client, "sentiment140", "text")  # Create new collection
+create_collection(client, "celebrity", "text")  # Create new collection
 
 print(f'current collections are : {[c for c in client.collections.list_all()]}')
 

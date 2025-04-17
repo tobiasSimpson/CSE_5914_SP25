@@ -30,8 +30,8 @@ function HomePage() {
     //   }
     // }
     console.log(responseJSON.sentiment);
-    const tweets = [responseJSON.tweets.generated, ...responseJSON.tweets.text]
-    setTweets(tweets);
+    // const tweets = [responseJSON.tweets.generated, ...responseJSON.tweets.text]
+    setTweets(responseJSON.tweets);
     setChartData([["Sentiment", "Number of Tweets", { role: "style" }],["Negative",responseJSON.sentiment.negative, "red"], ["Positive", responseJSON.sentiment.positive, "green"]]);
     setChartTitle(curSearchString)
     setSearchDisabled(false);

@@ -3,3 +3,4 @@ tqdm==4.67.1
 weaviate_client==4.10.4
 flask
 flask-cors
+openai
