@@ -5,7 +5,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import TweetList from './TweetList';
-import Card from 'react-bootstrap/Card';
 
 function HomePage() {
 
@@ -14,24 +13,30 @@ function HomePage() {
     setSearchDisabled(true);
     const curSearchString = searchString || "Artificial Intelligence";
     
-    // Get the search results
-    // Temporary
-    const a = () => Math.floor(Math.random() * 1000);
-    const b = Math.random
-    const data = [
-      ["Date", "Mentions", "Sentiment"],
-      ...Array.from(Array(12)).map((_, i) => 
-        [new Date(2024, i, 1), a(), b()]
-      )
-    ];
+    // Get the tweets from localhost:5000/tweet_data/<topic>
+    const response = await fetch(`http://localhost:5000/tweet_data/${curSearchString}`);
 
-    // Sleep for half a second
-    await new Promise(r => setTimeout(r, 500));
-
-    setSearchDisabled(false);
-    setChartData(data); 
+    if (!response.ok) {
+      setTweets(["Error fetching tweets"]);
+      setSearchDisabled(false);
+      return;
+    }
+    const responseJSON = await response.json();
+    // const responseJSON = {
+    //   sentiment: {positive: Math.floor(Math.random() * 100 + 1), negative: Math.floor(Math.random() * 100 + 1)},
+    //   tweets: {
+    //     generated: "This is a generated tweet",
+    //     text: ["This is a real tweet", "This is another real tweet"]
+    //   }
+    // }
+    console.log(responseJSON.sentiment);
+    // const tweets = [responseJSON.tweets.generated, ...responseJSON.tweets.text]
+    setTweets(responseJSON.tweets);
+    setChartData([["Sentiment", "Number of Tweets", { role: "style" }],["Negative",responseJSON.sentiment.negative, "red"], ["Positive", responseJSON.sentiment.positive, "green"]]);
     setChartTitle(curSearchString)
+    setSearchDisabled(false);
   }
+
 
   const searchIfEnter = (e) => {
     if (e.key === 'Enter') search();
@@ -53,12 +58,12 @@ function HomePage() {
   }, []);
 
   // Scroll to the tweet list whenever tweets changes
-  useEffect(() => {
-    // Check if tweets is empty
-    if (tweets.length === 0) return;
-    const y = document.getElementById("tweets-container").getBoundingClientRect().top + window.scrollY - 40;
-    window.scrollTo({top: y, behavior: 'smooth'});
-  }, [tweets]);
+  // useEffect(() => {
+  //   // Check if tweets is empty
+  //   if (tweets.length === 0) return;
+  //   const y = document.getElementById("tweets-container").getBoundingClientRect().top + window.scrollY - 40;
+  //   window.scrollTo({top: y, behavior: 'smooth'});
+  // }, [tweets]);
 
   return (
     <div className="App">

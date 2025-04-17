@@ -45,9 +45,9 @@ def run_sentiment_aggregation(
         print("Total count of tweets aggregated:", response.total_count)
         print("Aggregated results:")
         print(response.properties)
-
-    finally:
-        client.close()
+    except Exception as e:
+        print(f"Error during aggregation: {e}")
+        return None
 
 
 def run_neartext(
