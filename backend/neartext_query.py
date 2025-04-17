@@ -88,7 +88,7 @@ def run_groupby_neartext(
 
     response = tweets.query.near_text(
         query=query,
-        limit=100,
+        limit=150,
     )
 
     seen = set()
@@ -154,6 +154,8 @@ def generate_thread(
         celeb: len(tweets) for celeb, tweets in grouped_tweets.items()
     }
     celeb_list = [celeb for celeb, count in num_tweets_per_celeb.items()]
+    if 'realDonaldTrump' in celeb_list:
+        num_tweets_per_celeb['realDonaldTrump'] = 80
     celeb_probabilities = [
         count / sum(num_tweets_per_celeb.values())
         for count in num_tweets_per_celeb.values()
@@ -250,6 +252,7 @@ if __name__ == "__main__":
         groupby_val="username",
         collection_name="celebrity",
     )
+    
     ai_tweets = generate_thread(seed_tweet, celeb_tweets, style, allow_interruption=False, do_display=False)
     print(ai_tweets)
 
