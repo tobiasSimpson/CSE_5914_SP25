@@ -253,7 +253,7 @@ if __name__ == "__main__":
         collection_name="celebrity",
     )
     
-    ai_tweets = generate_thread(seed_tweet, celeb_tweets, style, allow_interruption=False, do_display=False)
+    ai_tweets = generate_thread(seed_tweet, celeb_tweets, style, allow_interruption=True, do_display=True)
     print(ai_tweets)
 
     client.close()
