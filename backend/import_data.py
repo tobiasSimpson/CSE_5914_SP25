@@ -29,16 +29,15 @@ def add_data(client: weaviate.WeaviateClient, collection_name: str, data: List[d
         for src_obj in tqdm(data):
             batch.add_object(
                 properties={
-                    "sentiment": src_obj["target"],
-                    "username": src_obj["user"],
+                    # "sentiment": src_obj["target"],
+                    "username": src_obj["username"],
                     "text": src_obj["text"],
-                    "date": src_obj["date"],
+                    # "date": src_obj["date"],
                 },
             )
             if batch.number_errors > 10:
                 print("Batch import stopped due to excessive errors.")
                 break
-    print(f'final number of items in the collection: {collection.data.__sizeof__()}')
     failed_objects = collection.batch.failed_objects
     if failed_objects:
         print(f"Number of failed imports: {len(failed_objects)}")
@@ -62,25 +61,23 @@ def init_client() -> weaviate.WeaviateClient:
 
 def main():
     client = init_client()
-    file = open("data/sentiment_140.json", "r")
+    file = open("data/celebrity_tweets.json", "r")
+    # file = open("data/sentiment_140.json", "r")
     json_list = file.read()
-    sentiment_data = json.loads(json_list)
+    data = json.loads(json_list)
     
     # sort data in ascending order of 'sentiment' value:
-    sentiment_data.sort(key=lambda x: x['target'], reverse=True)  # sort by sentiment value
-    sentiment_collection = client.collections.get("Sentiment140")
-
-    num_preeexisting_objects = sentiment_collection.data.__sizeof__()
-    print(f"Number of items in the collection: {num_preeexisting_objects}")
+    # data.sort(key=lambda x: x['target'], reverse=True)  # sort by sentiment value
+    data_collection = client.collections.get("celebrity")
 
     # TOTAL_N_ITEMS = 10000
-    TOTAL_N_ITEMS = 0
-    
-    sentiment_data = sentiment_data[num_preeexisting_objects:TOTAL_N_ITEMS + num_preeexisting_objects]
-    print(f'adding {len(sentiment_data)} new items to the collection...')
-    add_data(client, "Sentiment140", sentiment_data)
+    TOTAL_N_ITEMS = len(data)
+    data = data[:TOTAL_N_ITEMS] if TOTAL_N_ITEMS > 0 else data
+    print(f'adding {len(data)} new items to the collection...')
+    add_data(client, "celebrity", data)
     file.close()
     client.close()
 
 if __name__ == "__main__":
-    main()
+    # main()
+    print('Done!')
